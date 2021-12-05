@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>*** Variable 선언과 적용범위 ***</title>
+<script>
+// 1. 선언
+// 1.1) var : 재선언가능, 재할당가능
+	var x=100; x="대한민국"; x=123.456;
+	var x="Korea";
+	document.write("var x => "+x+"<br>");
+	
+// 1.2) let : 재선언불가능, 재할당가능 
+	let y=123; y="홍길동"; y=123.567;
+	//let y="JavaScript" ;
+	// => 오류발생 
+	// 	-> Uncaught SyntaxError: Identifier 'y' has already been declared
+	// 	-> script 가 모두 실행안됨
+	//     이유는 파싱단계에서 Error 발생하기 때문
+	document.write("let y => "+y+"<br>");
+	
+// 1.3) const : 재선언불가능, 재할당불가능 	
+	const PI = 3.141592;
+	//const PI = 314159; // 파싱단계에서 Error 발생 -> script 가 모두 실행안됨
+	//PI = '쵸코파이' ;
+	// => 실행시 오류
+	//    Assignment to constant variable.
+	document.write("const PI => "+PI+"<br>");
+
+// 1.4) delete	
+// => 묵시적 변수, 배열의 원소, 객체의 속성(프로퍼티) 등을 삭제할 수 있음. 
+// => var, let, const 로 정의한 변수에는 적용되지 않고,
+//	  정의없이(묵시적으로) 사용한 변수에만 적용됨.
+// => 삭제를 하면 true를 반환, 아니면 false를 반환
+//	  존재하지 않는 속성을 delete 하면 delete는 어떠한 작업도 없이 true를 반환	
+	delete(x); delete(y); delete PI;
+	document.write("* 명시적 변수 delete Test => "+x+y+PI+"<br>");
+	// => Error 없고, delete만 안됨.
+	name='홍길동';
+	delete(name);
+	//document.write("* 묵시적 변수 delete Test => "+name+"<br>");
+	// => Uncaught ReferenceError: name is not defined
+
+	// *** 배열 원소 Test
+	// => 						해당자료가 undefined 로 변경됨, 길이는 유지됨. 
+	var arr = ["가","나","다","라","마"] ;
+	document.write("* 배열 Before => ");
+	for (var a of arr) {document.write(a+" "); }
+	document.write("<br>");
+	delete arr[2] ;
+	document.write("* 배열 After => ");
+	for (var a of arr) {document.write(a+" "); }
+	document.write("<br>");
+	// *** 객체의 프로퍼티 delete Test
+	var student={
+		name: '홍길동',
+		score: 100,
+		study:function() {
+			return "***  Test delete Object Method ***<br>";
+		}
+	}//student
+	delete student.score;
+	delete student.study;
+	document.write("* delete student.score => "+student.score+"<br>"); //undefined 
+	document.write("* delete student.study => "+student.study+"<br>"); //undefined 
+	//document.write("* delete student.study() => "+student.study()+"<br>");
+	// => 오류 : Uncaught TypeError: student.study is not a function
+	
+// 2. Variable 적용범위
+// 2.1) 전역변수 : 현재스크립트 내의 어디서든 사용가능  
+	var sum=100;
+	var name='홍길동';
+	document.write("***  Variable 적용범위 Test ***<br>");
+	document.write("* 전역변수 sum => "+sum+"<br>");  //100
+	document.write("* 전역변수 name => "+name+"<br>");//홍길동
+	
+	//document.write("* inf_매개변수 cnt => "+cnt+"<br>"); // Error:cnt is not defined
+	//document.write("* inf_지역변수(묵) test => "+test+"<br>"); // Error:test is not defined
+	//document.write("* inf_지역변수(명) id => "+id+"<br>"); // Error:id is not defined
+	f(5) ;
+	document.write("* f 에서 for적용후_전역변수 sum => "+sum+"<br>");
+	//document.write("* inf_매개변수 cnt => "+cnt+"<br>"); // Error:cnt is not defined
+	//document.write("* inf_지역변수(명) id => "+id+"<br>"); // Error:id is not defined 
+	document.write("* inf_지역변수(묵) test => "+test+"<br>");
+	// => 묵시적지역변수 : f(5) 가 일단 호출된 후에는 전역으로 인식가능함.
+	// => 타 function 에서도 접근 가능하게됨
+	testTest();
+	
+// 2.2) 지역변수 : 정의된 function 내에서만 사용가능 
+	function f(cnt) {
+		var name='명시적지역';
+		var id='banana';
+		test='묵시적지역변수';
+		// ** 묵시적 지역변수
+		// => 일단 실행되어 값이 할당되면, 전역으로 사용됨.
+		// => 이러한 변수는 전역에서만 사용할 것을 권장하고, 
+		//    지역변수는 명시적으로 선언후 사용할 것을 권장함.  
+		
+		document.write("* inf_매개변수 cnt => "+cnt+"<br>"); // 5
+		document.write("* inf_지역변수 test => "+test+"<br>"); // '묵시적지역변수'
+		document.write("* inf_지역변수 name => "+name+"<br>"); // '명시적지역' 
+		document.write("* inf_전역변수 sum => "+sum+"<br>");   // 100
+		document.write("* inf_전역변수 this.name => "+this.name+"<br>");   // 홍길동  
+		document.write("* inf_전역변수 window.name => "+window.name+"<br>"); // 홍길동  
+		// => 동일한 변수명이 있는 경우 전역 변수에 접근 할때 
+		// => this 또는 window 로 접근
+		// => 이 외에도 전역객체를 가리키는 식별자는 self, frames, global 등
+		//    이 있으나, ECMA11 (ES11) 에서는 globalThis 로 통일됨. 
+		
+		// ** 반복자로 정의한 변수의 경우
+		// => function 에 종속된 지역변수
+		sum=0;
+		for (var i=0; i<cnt; i++) {
+			sum+=1;
+		} //for
+		document.write("* 반복자 i => "+i+"<br>"); 
+		// => Java : Error
+	} //f
+
+	// ** test 사용범위 Test
+	// => 일단 실행되어 값이 할당되면, 전역으로 사용됨 (타 function 에서도 접근 가능)
+	function testTest() {
+		document.write("* testTest() test => "+test+"<br>");
+	} //testTest()
+	
+</script>
+</head>
+<body>
+<hr>
+<pre><h3>
+** Variable 선언과 적용범위 ***
+
+1. 선언
+1.1) 변수
+	=> var : 재선언가능, 재할당가능 
+	=> let : 재선언불가능, 재할당가능 
+1.2) 상수
+	=> const : 재선언불가능, 재할당불가능	   
+1.3) 묵시적 정의 ( var, let, const 없이 정의 )
+	=> 전역변수의 경우
+	=> 차이점
+	   delete 가 적용됨 (변수와 값이 메모리에서 삭제됨)	
+	   명시적 선언시에는 delete가 적용되지않고, 변수와 값이 메모리에 보존됨 
+1.4) delete
+	=> 변수의 정의를 취소함
+	=> var, let, const 로 정의한 변수에는 적용되지 않고,
+	   정의없이(묵시적으로) 사용한 변수에만 적용됨. 
+</h3></pre>
+</body>
+</html>

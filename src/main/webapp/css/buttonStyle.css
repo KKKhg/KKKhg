@@ -1,0 +1,7 @@
+@charset "UTF-8";
+
+ {
+	 width: 90px; height: 70px; font-size: 15px; border-radius: 50%;
+	 background-color: tan;	color: white; outline: white;
+}
+{cursor: pointer; border-width: 5px; }
