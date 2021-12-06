@@ -6,17 +6,18 @@
 
 .right{text-align: right;}
 
-.bodycon { width: 100%; height: 100%; background-color: lightgray; position: absolute; z-index: 0;}
+.bodycon { width: 100%; height: 100%; position: relative;}
 
 .subject {margin: 15px auto;}
 
 .content { width: 60%; height: 80%; position: absolute; left: 20%; top: 10%; background-color: MintCream;
 			border-radius: 10%; }
 
-/* 네비바 */
-.nav-button {width: 70px; height: 30px; border-radius: 10%; border: 1px solid black; margin-right: 20px; 
+
+ /* 네비바 */
+/* .nav-button {width: 70px; height: 30px; border-radius: 10%; border: 1px solid black; margin-right: 20px; 
 			background-color: powderblue; cursor: pointer;}
 
 .nav-button:hover { border-width: 3px; }
 
-.now { border-width: 2px;}
+.now { border-width: 2px;} */
